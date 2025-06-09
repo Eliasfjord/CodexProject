@@ -13,6 +13,10 @@
       "phone": "46417944"
     }
   ],
+
+  "meetings": []
+}
+
   "users": [
     {
       "email": "admin@gmail.com",
@@ -21,3 +25,4 @@
   ],
   "calls": []
 }
+

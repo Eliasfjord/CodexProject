@@ -8,7 +8,15 @@ function load() {
     const data = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
+
     return { clients: [], users: [], calls: [] };
+
+
+    return { clients: [], meetings: [] };
+
+    return { clients: [], users: [] };
+
+
   }
 }
 
@@ -26,6 +34,7 @@ module.exports = {
     db.clients.push(client);
     save(db);
   },
+
   updateClient(id, updates) {
     const idx = db.clients.findIndex(c => c.id === id);
     if (idx !== -1) {
@@ -35,11 +44,24 @@ module.exports = {
     }
     return null;
   },
+
+
+  getMeetings() {
+    return db.meetings || [];
+  },
+  addMeeting(meeting) {
+    if (!db.meetings) {
+      db.meetings = [];
+    }
+    db.meetings.push(meeting);
+
+
   getUsers() {
     return db.users;
   },
   addUser(user) {
     db.users.push(user);
+
     save(db);
   },
   addCall(call) {

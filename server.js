@@ -70,6 +70,7 @@ app.post('/api/clients', (req, res) => {
   res.status(201).json(client);
 });
 
+
 app.put('/api/clients/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
   const updated = db.updateClient(id, req.body);
@@ -91,6 +92,18 @@ app.get('/api/stats', (req, res) => {
   const sales = calls.filter(c => c.outcome === 'sale').length;
   const closeRate = total ? sales / total : 0;
   res.json({ totalCalls: total, sales, closeRate });
+
+app.get('/api/meetings', (req, res) => {
+  res.json(db.getMeetings());
+});
+
+app.post('/api/meetings', (req, res) => {
+  const { title, datetime } = req.body;
+  const id = db.getMeetings().length + 1;
+  const meeting = { id, title, datetime };
+  db.addMeeting(meeting);
+  res.status(201).json(meeting);
+
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
