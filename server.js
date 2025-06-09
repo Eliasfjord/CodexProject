@@ -1,15 +1,25 @@
 const path = require('path');
 const express = require('express');
+codex/start-styling-work
+const bodyParser = require('body-parser');
+
+ main
 const cors = require('cors');
 const db = require('./db');
 
 const app = express();
 app.use(cors());
+codex/start-styling-work
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'Public')));
+
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'Public')));
 
 // Persisted clients are stored in db.json using our simple db module
 
+main
 app.get('/api/clients', (req, res) => {
   res.json(db.getClients());
 });
