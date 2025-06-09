@@ -130,6 +130,19 @@ app.post('/api/notes', (req, res) => {
   res.status(201).json(note);
 });
 
+// Task management
+app.get('/api/tasks', (req, res) => {
+  res.json(db.getTasks());
+});
+
+app.post('/api/tasks', (req, res) => {
+  const { title, due } = req.body;
+  const id = db.getTasks().length + 1;
+  const task = { id, title, due, completed: false };
+  db.addTask(task);
+  res.status(201).json(task);
+});
+
 // Policy management
 app.get('/api/policies', (req, res) => {
   res.json(db.getPolicies());
