@@ -49,9 +49,28 @@ li {
   border-bottom: 1px solid #ccc;
 }
 
+
 #meetings li {
   background: #fff;
   margin-bottom: 5px;
   padding: 8px;
   border-radius: 4px;
+
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1 1 200px;
+}
+
+.dashboard-card h2 {
+  margin-top: 0;
 }

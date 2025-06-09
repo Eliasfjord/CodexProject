@@ -21,11 +21,21 @@ app.use(express.static(path.join(__dirname, 'Public')));
 
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
-  if (email === 'admin@gmail.com' && password === 'admin123') {
-    req.session.user = { email };
-    return res.json({ email });
+  const user = db.getUsers().find(u => u.email === email && u.password === password);
+  if (user) {
+    req.session.user = { email: user.email };
+    return res.json({ email: user.email });
   }
   res.status(401).json({ message: 'Invalid credentials' });
+});
+
+app.post('/api/register', (req, res) => {
+  const { email, password } = req.body;
+  if (db.getUsers().some(u => u.email === email)) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+  db.addUser({ email, password });
+  res.status(201).end();
 });
 
 app.post('/api/logout', (req, res) => {

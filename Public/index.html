@@ -10,13 +10,37 @@
       const res = await fetch('/api/me');
       if (res.status !== 200) {
         window.location.href = '/login.html';
+        return null;
       }
+      return res.json();
     }
+
+    async function fetchDashboardData() {
+      const clientRes = await fetch('/api/clients');
+      const clients = await clientRes.json();
+      document.getElementById('clientCount').textContent = `${clients.length} Clients`;
+
+      const recentList = document.getElementById('recentClients');
+      recentList.innerHTML = '';
+      clients.slice(-5).reverse().forEach(client => {
+        const li = document.createElement('li');
+        li.textContent = `${client.name} (${client.email})`;
+        recentList.appendChild(li);
+      });
+    }
+
     async function logout() {
       await fetch('/api/logout', { method: 'POST' });
       window.location.href = '/login.html';
     }
-    document.addEventListener('DOMContentLoaded', requireAuth);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await requireAuth();
+      if (user) {
+        document.getElementById('welcomeMsg').textContent = `Welcome, ${user.email}`;
+        fetchDashboardData();
+      }
+    });
   </script>
 </head>
 <body>
@@ -29,7 +53,26 @@
   </nav>
   <main>
     <h1>Dashboard</h1>
-    <p>Welcome to the Insurance CRM dashboard.</p>
+    <p id="welcomeMsg">Welcome to the Insurance CRM dashboard.</p>
+
+    <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <h2 id="clientCount">0 Clients</h2>
+        <p>Total clients stored in the CRM.</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Recent Clients</h2>
+        <ul id="recentClients"></ul>
+      </div>
+      <div class="dashboard-card">
+        <h2>Quick Links</h2>
+        <ul>
+          <li><a href="/leads.html">Add Client</a></li>
+          <li><a href="/calendar.html">View Calendar</a></li>
+          <li><a href="/profile.html">Your Profile</a></li>
+        </ul>
+      </div>
+    </div>
   </main>
 </body>
 </html>
