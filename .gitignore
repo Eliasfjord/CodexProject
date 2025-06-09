@@ -1,2 +1,4 @@
 node_modules/
 crm.sqlite
+
+.DS_Store
