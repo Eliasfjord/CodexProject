@@ -1,30 +1,56 @@
 const path = require('path');
 const express = require('express');
-codex/start-styling-work
 const bodyParser = require('body-parser');
-
- main
 const cors = require('cors');
+const session = require('express-session');
 const db = require('./db');
 
 const app = express();
 app.use(cors());
-codex/start-styling-work
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'Public')));
-
-
-app.use(express.json());
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(express.static(path.join(__dirname, 'Public')));
 
 // Persisted clients are stored in db.json using our simple db module
+const USERS = [{ email: 'admin@gmail.com', password: 'admin123' }];
 
-main
-app.get('/api/clients', (req, res) => {
+function ensureLoggedIn(req, res, next) {
+  if (req.session.user) return next();
+  res.status(401).json({ error: 'Unauthorized' });
+}
+
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = USERS.find(u => u.email === email && u.password === password);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  req.session.user = { email: user.email };
+  res.json({ success: true });
+});
+
+app.post('/api/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
+
+app.get('/api/me', (req, res) => {
+  if (req.session.user) {
+    res.json({ email: req.session.user.email });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+app.get('/api/clients', ensureLoggedIn, (req, res) => {
   res.json(db.getClients());
 });
 
-app.post('/api/clients', (req, res) => {
+app.post('/api/clients', ensureLoggedIn, (req, res) => {
   const { name, email, phone } = req.body;
   const id = db.getClients().length + 1;
   const client = { id, name, email, phone };
