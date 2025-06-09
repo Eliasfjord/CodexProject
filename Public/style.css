@@ -74,3 +74,31 @@ li {
 .dashboard-card h2 {
   margin-top: 0;
 }
+
+/* Calendar and tasks layout */
+.calendar-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.task-list {
+  width: 250px;
+}
+
+.calendar-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-grid div {
+  background: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  min-height: 80px;
+}
+
+.calendar-grid .today {
+  background: #e0f7fa;
+}

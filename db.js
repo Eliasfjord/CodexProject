@@ -8,7 +8,7 @@ function load() {
     const data = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(data);
   } catch {
-    return { clients: [], meetings: [], notes: [], users: [], calls: [], policies: [] };
+    return { clients: [], meetings: [], notes: [], tasks: [], users: [], calls: [], policies: [] };
   }
 }
 
@@ -62,6 +62,16 @@ module.exports = {
   addNote(note) {
     if (!db.notes) db.notes = [];
     db.notes.push(note);
+    save(db);
+  },
+
+  // tasks
+  getTasks() {
+    return db.tasks || [];
+  },
+  addTask(task) {
+    if (!db.tasks) db.tasks = [];
+    db.tasks.push(task);
     save(db);
   },
 
