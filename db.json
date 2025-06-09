@@ -13,10 +13,20 @@
       "phone": "46417944"
     }
   ],
-
-  "meetings": []
-}
-
+  "meetings": [
+    {
+      "id": 1,
+      "title": "Test Meeting",
+      "datetime": "2024-01-01T10:00"
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "title": "Welcome",
+      "text": "First note"
+    }
+  ],
   "users": [
     {
       "email": "admin@gmail.com",
@@ -24,4 +34,3 @@
     }
   ]
 }
-

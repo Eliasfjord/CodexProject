@@ -6,13 +6,9 @@ const DB_FILE = path.join(__dirname, 'db.json');
 function load() {
   try {
     const data = fs.readFileSync(DB_FILE, 'utf8');
-    return JSON.parse(data);
+  return JSON.parse(data);
   } catch (err) {
-
-    return { clients: [], meetings: [] };
-
-    return { clients: [], users: [] };
-
+    return { clients: [], meetings: [], users: [] };
   }
 }
 
@@ -32,20 +28,29 @@ module.exports = {
   },
 
   getMeetings() {
-    return db.meetings || [];
+    return db.meetings;
   },
   addMeeting(meeting) {
-    if (!db.meetings) {
-      db.meetings = [];
-    }
     db.meetings.push(meeting);
+    save(db);
+  },
 
   getUsers() {
     return db.users;
   },
   addUser(user) {
     db.users.push(user);
+    save(db);
+  },
 
+  getNotes() {
+    return db.notes || [];
+  },
+  addNote(note) {
+    if (!db.notes) {
+      db.notes = [];
+    }
+    db.notes.push(note);
     save(db);
   }
 };

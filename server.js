@@ -74,6 +74,19 @@ app.post('/api/meetings', (req, res) => {
   db.addMeeting(meeting);
   res.status(201).json(meeting);
 });
+
+// Simple note endpoints
+app.get('/api/notes', (req, res) => {
+  res.json(db.getNotes());
+});
+
+app.post('/api/notes', (req, res) => {
+  const { title, text } = req.body;
+  const id = db.getNotes().length + 1;
+  const note = { id, title, text };
+  db.addNote(note);
+  res.status(201).json(note);
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

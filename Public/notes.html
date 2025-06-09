@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calendar</title>
+  <title>Notes</title>
   <link rel="stylesheet" href="/style.css">
   <script>
     async function requireAuth() {
@@ -16,36 +16,35 @@
       await fetch('/api/logout', { method: 'POST' });
       window.location.href = '/login.html';
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      requireAuth();
-      fetchMeetings();
-    });
-
-    async function fetchMeetings() {
-      const res = await fetch('/api/meetings');
-      const meetings = await res.json();
-      const list = document.getElementById('meetings');
+    document.addEventListener('DOMContentLoaded', requireAuth);
+  </script>
+  <script>
+    async function fetchNotes() {
+      const res = await fetch('/api/notes');
+      const notes = await res.json();
+      const list = document.getElementById('notes');
       list.innerHTML = '';
-      meetings.forEach(m => {
+      notes.forEach(note => {
         const li = document.createElement('li');
-        const date = new Date(m.datetime);
-        li.textContent = `${date.toLocaleString()} - ${m.title}`;
+        li.textContent = `${note.title}: ${note.text}`;
         list.appendChild(li);
       });
     }
 
-    async function addMeeting(event) {
+    async function addNote(event) {
       event.preventDefault();
       const title = document.getElementById('title').value;
-      const datetime = document.getElementById('datetime').value;
-      await fetch('/api/meetings', {
+      const text = document.getElementById('text').value;
+      await fetch('/api/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, datetime })
+        body: JSON.stringify({ title, text })
       });
-      document.getElementById('meetingForm').reset();
-      fetchMeetings();
+      document.getElementById('noteForm').reset();
+      fetchNotes();
     }
+
+    document.addEventListener('DOMContentLoaded', fetchNotes);
   </script>
 </head>
 <body>
@@ -53,21 +52,18 @@
     <a href="/index.html">Dashboard</a> |
     <a href="/calendar.html">Calendar</a> |
     <a href="/leads.html">Leads</a> |
-    <a href="/notes.html">Notes</a> |
     <a href="/profile.html">Profile</a> |
+    <a href="/notes.html">Notes</a> |
     <a href="#" onclick="logout()">Logout</a>
   </nav>
   <main>
-    <h1>Calendar</h1>
-    <h2>Add Meeting</h2>
-    <form id="meetingForm" onsubmit="addMeeting(event)">
+    <h1>Notes</h1>
+    <form id="noteForm" onsubmit="addNote(event)">
       <input id="title" placeholder="Title" required>
-      <input id="datetime" type="datetime-local" required>
+      <textarea id="text" placeholder="Text" required></textarea>
       <button type="submit">Add</button>
     </form>
-
-    <h2>Upcoming Meetings</h2>
-    <ul id="meetings"></ul>
+    <ul id="notes"></ul>
   </main>
 </body>
 </html>
