@@ -27,6 +27,20 @@
         li.textContent = `${client.name} (${client.email})`;
         recentList.appendChild(li);
       });
+
+      const statsRes = await fetch('/api/stats');
+      const stats = await statsRes.json();
+      document.getElementById('totalCalls').textContent = `Calls: ${stats.totalCalls}`;
+      document.getElementById('sales').textContent = `Sales: ${stats.sales}`;
+      document.getElementById('closeRate').textContent = `Close Rate: ${(stats.closeRate*100).toFixed(1)}%`;
+
+      const target = parseInt(localStorage.getItem('dailyTarget') || '0', 10);
+      const salesToday = stats.sales;
+      document.getElementById('goalDisplay').textContent = target ? `${salesToday}/${target}` : `${salesToday}`;
+      if (target) {
+        const percent = Math.min(100, (salesToday/target)*100);
+        document.getElementById('goalBar').style.width = percent + '%';
+      }
     }
 
     async function logout() {
@@ -40,7 +54,15 @@
         document.getElementById('welcomeMsg').textContent = `Welcome, ${user.email}`;
         fetchDashboardData();
       }
+      const stored = localStorage.getItem('dailyTarget') || '';
+      document.getElementById('dailyTarget').value = stored;
     });
+
+    function saveTarget() {
+      const val = document.getElementById('dailyTarget').value;
+      localStorage.setItem('dailyTarget', val);
+      fetchDashboardData();
+    }
   </script>
 </head>
 <body>
@@ -71,6 +93,20 @@
           <li><a href="/calendar.html">View Calendar</a></li>
           <li><a href="/profile.html">Your Profile</a></li>
         </ul>
+      </div>
+      <div class="dashboard-card">
+        <h2>Statistics</h2>
+        <p id="totalCalls">Calls: 0</p>
+        <p id="sales">Sales: 0</p>
+        <p id="closeRate">Close Rate: 0%</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Daily Goal</h2>
+        <input id="dailyTarget" type="number" min="0" placeholder="Target" onchange="saveTarget()">
+        <div style="background:#eee;width:100%;height:20px;border-radius:4px;overflow:hidden;margin-top:5px;">
+          <div id="goalBar" style="background:#4caf50;height:100%;width:0;"></div>
+        </div>
+        <p id="goalDisplay"></p>
       </div>
     </div>
   </main>
