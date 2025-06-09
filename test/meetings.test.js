@@ -5,7 +5,7 @@ const { setTimeout: delay } = require('node:timers/promises');
 
 async function startServer() {
   const child = spawn('node', ['server.js']);
-  await delay(500); // wait for server to start
+  await delay(500);
   return child;
 }
 
@@ -14,17 +14,17 @@ async function stopServer(child) {
   await delay(100);
 }
 
-test('admin login works', { concurrency: false }, async () => {
+test('adding a meeting works', { concurrency: false }, async () => {
   const server = await startServer();
   try {
-    const res = await fetch('http://localhost:3000/api/login', {
+    const res = await fetch('http://localhost:3000/api/meetings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@gmail.com', password: 'admin123' })
+      body: JSON.stringify({ title: 'Test Meeting', datetime: '2024-01-01T10:00' })
     });
-    assert.equal(res.status, 200);
+    assert.equal(res.status, 201);
     const data = await res.json();
-    assert.equal(data.email, 'admin@gmail.com');
+    assert.equal(data.title, 'Test Meeting');
   } finally {
     await stopServer(server);
   }

@@ -8,7 +8,7 @@ function load() {
     const data = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
-    return { clients: [] };
+    return { clients: [], meetings: [] };
   }
 }
 
@@ -24,6 +24,16 @@ module.exports = {
   },
   addClient(client) {
     db.clients.push(client);
+    save(db);
+  },
+  getMeetings() {
+    return db.meetings || [];
+  },
+  addMeeting(meeting) {
+    if (!db.meetings) {
+      db.meetings = [];
+    }
+    db.meetings.push(meeting);
     save(db);
   }
 };

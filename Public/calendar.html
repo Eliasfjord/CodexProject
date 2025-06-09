@@ -16,7 +16,36 @@
       await fetch('/api/logout', { method: 'POST' });
       window.location.href = '/login.html';
     }
-    document.addEventListener('DOMContentLoaded', requireAuth);
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      fetchMeetings();
+    });
+
+    async function fetchMeetings() {
+      const res = await fetch('/api/meetings');
+      const meetings = await res.json();
+      const list = document.getElementById('meetings');
+      list.innerHTML = '';
+      meetings.forEach(m => {
+        const li = document.createElement('li');
+        const date = new Date(m.datetime);
+        li.textContent = `${date.toLocaleString()} - ${m.title}`;
+        list.appendChild(li);
+      });
+    }
+
+    async function addMeeting(event) {
+      event.preventDefault();
+      const title = document.getElementById('title').value;
+      const datetime = document.getElementById('datetime').value;
+      await fetch('/api/meetings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, datetime })
+      });
+      document.getElementById('meetingForm').reset();
+      fetchMeetings();
+    }
   </script>
 </head>
 <body>
@@ -29,7 +58,15 @@
   </nav>
   <main>
     <h1>Calendar</h1>
-    <p>This is the calendar page.</p>
+    <h2>Add Meeting</h2>
+    <form id="meetingForm" onsubmit="addMeeting(event)">
+      <input id="title" placeholder="Title" required>
+      <input id="datetime" type="datetime-local" required>
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Upcoming Meetings</h2>
+    <ul id="meetings"></ul>
   </main>
 </body>
 </html>
