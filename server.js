@@ -129,6 +129,27 @@ app.post('/api/notes', (req, res) => {
   db.addNote(note);
   res.status(201).json(note);
 });
+
+// Policy management
+app.get('/api/policies', (req, res) => {
+  res.json(db.getPolicies());
+});
+
+app.post('/api/policies', (req, res) => {
+  const id = db.getPolicies().length + 1;
+  const policy = { id, ...req.body };
+  db.addPolicy(policy);
+  res.status(201).json(policy);
+});
+
+app.put('/api/policies/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const updated = db.updatePolicy(id, req.body);
+  if (!updated) {
+    return res.status(404).end();
+  }
+  res.json(updated);
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

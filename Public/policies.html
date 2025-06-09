@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policies</title>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    async function requireAuth() {
+      const res = await fetch('/api/me');
+      if (res.status !== 200) {
+        window.location.href = '/login.html';
+      }
+    }
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login.html';
+    }
+    document.addEventListener('DOMContentLoaded', requireAuth);
+  </script>
+  <script>
+    async function fetchPolicies() {
+      const res = await fetch('/api/policies');
+      const policies = await res.json();
+      displayPolicies(policies);
+    }
+
+    function displayPolicies(policies) {
+      const tbody = document.getElementById('policies');
+      tbody.innerHTML = '';
+      const counts = {};
+      policies.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.company || ''}</td><td>${p.number || p.policyNumber || ''}</td><td>${p.category || ''}</td>`;
+        tbody.appendChild(tr);
+        if (p.company) counts[p.company] = (counts[p.company] || 0) + 1;
+      });
+      const cmp = document.getElementById('comparison');
+      cmp.innerHTML = '';
+      for (const [comp, count] of Object.entries(counts)) {
+        const li = document.createElement('li');
+        li.textContent = `${comp}: ${count}`;
+        cmp.appendChild(li);
+      }
+    }
+
+    async function importPolicies(event) {
+      event.preventDefault();
+      const fileInput = document.getElementById('file');
+      const category = document.getElementById('category').value;
+      const file = fileInput.files[0];
+      if (!file) return;
+      const text = await file.text();
+      let data;
+      if (file.name.endsWith('.csv')) {
+        const lines = text.trim().split(/\r?\n/).filter(Boolean);
+        const entries = lines.slice(1);
+        data = entries.map(l => {
+          const [company, number] = l.split(',');
+          return { company: company.trim(), number: number.trim(), category };
+        });
+      } else {
+        data = JSON.parse(text);
+        if (!Array.isArray(data)) data = [data];
+        data = data.map(p => ({ ...p, category }));
+      }
+      for (const p of data) {
+        await fetch('/api/policies', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(p)
+        });
+      }
+      document.getElementById('policyForm').reset();
+      fetchPolicies();
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchPolicies);
+  </script>
+</head>
+<body>
+  <nav>
+    <a href="/index.html">Dashboard</a> |
+    <a href="/calendar.html">Calendar</a> |
+    <a href="/leads.html">Leads</a> |
+    <a href="/notes.html">Notes</a> |
+    <a href="/profile.html">Profile</a> |
+    <a href="/policies.html">Policies</a> |
+    <a href="#" onclick="logout()">Logout</a>
+  </nav>
+  <main>
+    <h1>Policies</h1>
+    <form id="policyForm" onsubmit="importPolicies(event)">
+      <input type="file" id="file" accept=".csv,application/json" required>
+      <input id="category" placeholder="Category" required>
+      <button type="submit">Import</button>
+    </form>
+    <table>
+      <thead><tr><th>Company</th><th>Number</th><th>Category</th></tr></thead>
+      <tbody id="policies"></tbody>
+    </table>
+    <h2>Policies by Company</h2>
+    <ul id="comparison"></ul>
+  </main>
+</body>
+</html>
