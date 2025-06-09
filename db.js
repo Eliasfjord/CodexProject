@@ -8,7 +8,19 @@ function load() {
     const data = fs.readFileSync(DB_FILE, 'utf8');
   return JSON.parse(data);
   } catch (err) {
+
     return { clients: [], meetings: [], users: [] };
+
+
+    return { clients: [], users: [], calls: [] };
+
+
+    return { clients: [], meetings: [] };
+
+    return { clients: [], users: [] };
+
+
+
   }
 }
 
@@ -27,6 +39,17 @@ module.exports = {
     save(db);
   },
 
+  updateClient(id, updates) {
+    const idx = db.clients.findIndex(c => c.id === id);
+    if (idx !== -1) {
+      db.clients[idx] = { ...db.clients[idx], ...updates };
+      save(db);
+      return db.clients[idx];
+    }
+    return null;
+  },
+
+
   getMeetings() {
     return db.meetings;
   },
@@ -34,6 +57,7 @@ module.exports = {
     db.meetings.push(meeting);
     save(db);
   },
+
 
   getUsers() {
     return db.users;
@@ -52,5 +76,12 @@ module.exports = {
     }
     db.notes.push(note);
     save(db);
+  },
+  addCall(call) {
+    db.calls.push(call);
+    save(db);
+  },
+  getCalls() {
+    return db.calls;
   }
 };
