@@ -26,8 +26,10 @@ This project provides a simple CRM application for insurance agents. It includes
 ## Features
 
 - Dashboard, calendar, leads and profile pages.
-- Add new clients with name, email, and phone number from the leads page.
-- View a list of existing clients.
-- Client data is persisted to `db.json`.
+- Add new clients with name, email, phone number, status and notes from the leads page.
+- Filter clients by status.
+- Passwords are stored securely using bcrypt.
+- Record call outcomes and view basic statistics on the dashboard.
+- Client and call data is persisted to `db.json`.
 
 This is a foundation for future enhancements such as team management and dashboards.

@@ -20,13 +20,15 @@
   </script>
   <script>
     async function fetchClients() {
-      const res = await fetch('/api/clients');
+      const status = document.getElementById('statusFilter').value;
+      const query = status ? `?status=${status}` : '';
+      const res = await fetch('/api/clients' + query);
       const clients = await res.json();
       const list = document.getElementById('clients');
       list.innerHTML = '';
       clients.forEach(client => {
         const li = document.createElement('li');
-        li.textContent = `${client.name} (${client.email}) - ${client.phone}`;
+        li.textContent = `${client.name} (${client.email}) - ${client.phone} [${client.status}] - ${client.notes}`;
         list.appendChild(li);
       });
     }
@@ -36,13 +38,15 @@
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
+      const status = document.getElementById('status').value;
+      const notes = document.getElementById('notes').value;
 
       await fetch('/api/clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, phone })
+        body: JSON.stringify({ name, email, phone, status, notes })
       });
 
       document.getElementById('clientForm').reset();
@@ -67,10 +71,24 @@
       <input id="name" placeholder="Name" required>
       <input id="email" placeholder="Email" required>
       <input id="phone" placeholder="Phone" required>
+      <select id="status">
+        <option value="Hot">Hot</option>
+        <option value="Warm">Warm</option>
+        <option value="Cold" selected>Cold</option>
+      </select>
+      <input id="notes" placeholder="Notes">
       <button type="submit">Add</button>
     </form>
 
     <h2>Clients</h2>
+    <label>Filter:
+      <select id="statusFilter" onchange="fetchClients()">
+        <option value="">All</option>
+        <option value="Hot">Hot</option>
+        <option value="Warm">Warm</option>
+        <option value="Cold">Cold</option>
+      </select>
+    </label>
     <ul id="clients"></ul>
   </main>
 </body>

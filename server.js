@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
+const bcrypt = require('bcryptjs');
 const db = require('./db');
 
 const app = express();
@@ -19,22 +20,23 @@ app.use(express.static(path.join(__dirname, 'Public')));
 
 // Persisted clients are stored in db.json using our simple db module
 
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = db.getUsers().find(u => u.email === email && u.password === password);
-  if (user) {
+  const user = db.getUsers().find(u => u.email === email);
+  if (user && await bcrypt.compare(password, user.password)) {
     req.session.user = { email: user.email };
     return res.json({ email: user.email });
   }
   res.status(401).json({ message: 'Invalid credentials' });
 });
 
-app.post('/api/register', (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { email, password } = req.body;
   if (db.getUsers().some(u => u.email === email)) {
     return res.status(400).json({ message: 'User already exists' });
   }
-  db.addUser({ email, password });
+  const hash = await bcrypt.hash(password, 10);
+  db.addUser({ email, password: hash });
   res.status(201).end();
 });
 
@@ -52,15 +54,43 @@ app.get('/api/me', (req, res) => {
 });
 
 app.get('/api/clients', (req, res) => {
-  res.json(db.getClients());
+  const { status } = req.query;
+  let clients = db.getClients();
+  if (status) {
+    clients = clients.filter(c => c.status === status);
+  }
+  res.json(clients);
 });
 
 app.post('/api/clients', (req, res) => {
-  const { name, email, phone } = req.body;
+  const { name, email, phone, status = 'Cold', notes = '' } = req.body;
   const id = db.getClients().length + 1;
-  const client = { id, name, email, phone };
+  const client = { id, name, email, phone, status, notes };
   db.addClient(client);
   res.status(201).json(client);
+});
+
+app.put('/api/clients/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const updated = db.updateClient(id, req.body);
+  if (!updated) {
+    return res.status(404).end();
+  }
+  res.json(updated);
+});
+
+app.post('/api/calls', (req, res) => {
+  const call = { ...req.body, date: new Date().toISOString() };
+  db.addCall(call);
+  res.status(201).json(call);
+});
+
+app.get('/api/stats', (req, res) => {
+  const calls = db.getCalls();
+  const total = calls.length;
+  const sales = calls.filter(c => c.outcome === 'sale').length;
+  const closeRate = total ? sales / total : 0;
+  res.json({ totalCalls: total, sales, closeRate });
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
