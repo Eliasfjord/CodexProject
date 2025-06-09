@@ -4,20 +4,21 @@ const { spawn } = require('node:child_process');
 const { setTimeout: delay } = require('node:timers/promises');
 
 async function startServer() {
-  const child = spawn('node', ['server.js']);
+  const port = 3000 + Math.floor(Math.random() * 1000);
+  const child = spawn('node', ['server.js'], { env: { ...process.env, PORT: port } });
   await delay(500); // wait for server to start
-  return child;
+  return { child, port };
 }
 
-async function stopServer(child) {
-  child.kill();
+async function stopServer(server) {
+  server.child.kill();
   await delay(100);
 }
 
 test('admin login works', { concurrency: false }, async () => {
   const server = await startServer();
   try {
-    const res = await fetch('http://localhost:3000/api/login', {
+    const res = await fetch(`http://localhost:${server.port}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'admin@gmail.com', password: 'admin123' })

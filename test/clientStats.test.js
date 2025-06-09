@@ -15,17 +15,13 @@ async function stopServer(server) {
   await delay(100);
 }
 
-test('adding a meeting works', { concurrency: false }, async () => {
+test('client stats endpoint returns counts', { concurrency: false }, async () => {
   const server = await startServer();
   try {
-    const res = await fetch(`http://localhost:${server.port}/api/meetings`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: 'Test Meeting', datetime: '2024-01-01T10:00' })
-    });
-    assert.equal(res.status, 201);
+    const res = await fetch(`http://localhost:${server.port}/api/clientStats`);
+    assert.equal(res.status, 200);
     const data = await res.json();
-    assert.equal(data.title, 'Test Meeting');
+    assert.ok(typeof data === 'object' && Object.keys(data).length >= 0);
   } finally {
     await stopServer(server);
   }

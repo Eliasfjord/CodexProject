@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Insurance CRM Dashboard</title>
   <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    let statusChart;
     async function requireAuth() {
       const res = await fetch('/api/me');
       if (res.status !== 200) {
@@ -19,6 +21,25 @@
       const clientRes = await fetch('/api/clients');
       const clients = await clientRes.json();
       document.getElementById('clientCount').textContent = `${clients.length} Clients`;
+
+      const statusRes = await fetch('/api/clientStats');
+      const statusCounts = await statusRes.json();
+      const labels = Object.keys(statusCounts);
+      const data = Object.values(statusCounts);
+      if (statusChart) {
+        statusChart.data.labels = labels;
+        statusChart.data.datasets[0].data = data;
+        statusChart.update();
+      } else {
+        statusChart = new Chart(document.getElementById('statusChart'), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{ label: 'Clients', data, backgroundColor: '#4caf50' }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+      }
 
       const recentList = document.getElementById('recentClients');
       recentList.innerHTML = '';
@@ -100,6 +121,10 @@
         <p id="totalCalls">Calls: 0</p>
         <p id="sales">Sales: 0</p>
         <p id="closeRate">Close Rate: 0%</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Client Status</h2>
+        <canvas id="statusChart" width="300" height="200"></canvas>
       </div>
       <div class="dashboard-card">
         <h2>Daily Goal</h2>
