@@ -6,21 +6,9 @@ const DB_FILE = path.join(__dirname, 'db.json');
 function load() {
   try {
     const data = fs.readFileSync(DB_FILE, 'utf8');
-  return JSON.parse(data);
-  } catch (err) {
-
-    return { clients: [], meetings: [], users: [] };
-
-
-    return { clients: [], users: [], calls: [] };
-
-
-    return { clients: [], meetings: [] };
-
-    return { clients: [], users: [] };
-
-
-
+    return JSON.parse(data);
+  } catch {
+    return { clients: [], meetings: [], notes: [], users: [], calls: [], policies: [] };
   }
 }
 
@@ -31,6 +19,7 @@ function save(data) {
 const db = load();
 
 module.exports = {
+  // clients
   getClients() {
     return db.clients;
   },
@@ -38,7 +27,6 @@ module.exports = {
     db.clients.push(client);
     save(db);
   },
-
   updateClient(id, updates) {
     const idx = db.clients.findIndex(c => c.id === id);
     if (idx !== -1) {
@@ -49,7 +37,7 @@ module.exports = {
     return null;
   },
 
-
+  // meetings
   getMeetings() {
     return db.meetings;
   },
@@ -58,7 +46,7 @@ module.exports = {
     save(db);
   },
 
-
+  // users
   getUsers() {
     return db.users;
   },
@@ -67,21 +55,41 @@ module.exports = {
     save(db);
   },
 
+  // notes
   getNotes() {
     return db.notes || [];
   },
   addNote(note) {
-    if (!db.notes) {
-      db.notes = [];
-    }
+    if (!db.notes) db.notes = [];
     db.notes.push(note);
     save(db);
   },
+
+  // calls
   addCall(call) {
     db.calls.push(call);
     save(db);
   },
   getCalls() {
     return db.calls;
+  },
+
+  // policies
+  getPolicies() {
+    return db.policies || [];
+  },
+  addPolicy(policy) {
+    if (!db.policies) db.policies = [];
+    db.policies.push(policy);
+    save(db);
+  },
+  updatePolicy(id, updates) {
+    const idx = db.policies.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      db.policies[idx] = { ...db.policies[idx], ...updates };
+      save(db);
+      return db.policies[idx];
+    }
+    return null;
   }
 };
