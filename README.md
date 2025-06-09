@@ -13,8 +13,10 @@ This project provides a simple CRM application for insurance agents. It includes
    node server.js
    ```
 
-
 3. Open your browser and navigate to `http://localhost:3000` to use the CRM.
+   Use the following credentials to log in:
+   - **Email:** `admin@gmail.com`
+   - **Password:** `admin123`
 
 ## Features
 
