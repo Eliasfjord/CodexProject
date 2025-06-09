@@ -8,12 +8,17 @@ This project provides a simple CRM application for insurance agents. It includes
    ```bash
    npm install
    ```
-2. Start the server:
+2. *(Optional)* run the automated tests:
+   ```bash
+   npm test
+   ```
+3. Start the server:
    ```bash
    node server.js
    ```
 
-3. Open your browser and navigate to `http://localhost:3000` to use the CRM.
+4. Open your browser and navigate to `http://localhost:3000` to use the CRM.
+
    Use the following credentials to log in:
    - **Email:** `admin@gmail.com`
    - **Password:** `admin123`
