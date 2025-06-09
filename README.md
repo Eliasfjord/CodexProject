@@ -1,20 +1,15 @@
 # Insurance CRM
 
-This project provides a simple CRM application for insurance agents. It includes a Node.js backend built with Express and a minimal frontend written in vanilla HTML/JavaScript.
+This project provides a simple CRM application for insurance agents. It includes a Node.js backend and a minimal frontend written in vanilla HTML/JavaScript.
 
 ## Getting Started
 
-1. Install dependencies (requires Node.js):
-   ```bash
-   npm install
-   ```
-
-2. Start the server:
+1. Start the server:
    ```bash
    node server.js
    ```
 
-3. Open your browser and navigate to `http://localhost:3000` to use the CRM.
+2. Open your browser and navigate to `http://localhost:3000` to use the CRM.
 
 ## Features
 
