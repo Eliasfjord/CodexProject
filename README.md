@@ -12,7 +12,8 @@ This project provides a simple CRM application for insurance agents. It includes
    ```bash
    npm test
    ```
-3. Start the server:
+3. Start the server (this will create `crm.sqlite` if it does not exist and
+   import the sample data from `db.json`):
    ```bash
    node server.js
    ```
@@ -30,6 +31,7 @@ This project provides a simple CRM application for insurance agents. It includes
 - Filter clients by status.
 - Passwords are stored securely using bcrypt.
 - Record call outcomes and view basic statistics on the dashboard.
-- Client and call data is persisted to `db.json`.
+- Data is stored in a SQLite database (`crm.sqlite`). On first run the database
+  is populated with the contents of `db.json` if the file exists.
 
 This is a foundation for future enhancements such as team management and dashboards.
