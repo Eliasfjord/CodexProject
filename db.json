@@ -12,5 +12,11 @@
       "email": "elias@gmail.com",
       "phone": "46417944"
     }
+  ],
+  "users": [
+    {
+      "email": "admin@gmail.com",
+      "password": "admin123"
+    }
   ]
 }

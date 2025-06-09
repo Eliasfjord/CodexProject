@@ -8,7 +8,7 @@ function load() {
     const data = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
-    return { clients: [] };
+    return { clients: [], users: [] };
   }
 }
 
@@ -24,6 +24,13 @@ module.exports = {
   },
   addClient(client) {
     db.clients.push(client);
+    save(db);
+  },
+  getUsers() {
+    return db.users;
+  },
+  addUser(user) {
+    db.users.push(user);
     save(db);
   }
 };

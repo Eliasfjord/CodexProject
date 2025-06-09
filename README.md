@@ -19,7 +19,7 @@ This project provides a simple CRM application for insurance agents. It includes
 
 4. Open your browser and navigate to `http://localhost:3000` to use the CRM.
 
-   Use the following credentials to log in:
+   You can register a new account from the login page or use the default admin credentials:
    - **Email:** `admin@gmail.com`
    - **Password:** `admin123`
 
