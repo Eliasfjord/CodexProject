@@ -62,6 +62,18 @@ app.post('/api/clients', (req, res) => {
   db.addClient(client);
   res.status(201).json(client);
 });
+
+app.get('/api/meetings', (req, res) => {
+  res.json(db.getMeetings());
+});
+
+app.post('/api/meetings', (req, res) => {
+  const { title, datetime } = req.body;
+  const id = db.getMeetings().length + 1;
+  const meeting = { id, title, datetime };
+  db.addMeeting(meeting);
+  res.status(201).json(meeting);
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

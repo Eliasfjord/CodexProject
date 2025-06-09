@@ -49,6 +49,13 @@ li {
   border-bottom: 1px solid #ccc;
 }
 
+
+#meetings li {
+  background: #fff;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 4px;
+
 .dashboard-cards {
   display: flex;
   flex-wrap: wrap;
