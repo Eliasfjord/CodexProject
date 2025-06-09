@@ -15,13 +15,7 @@ app.use(express.static(path.join(__dirname, 'Public')));
 app.get('/api/clients', (req, res) => {
   res.json(db.getClients());
 });
-app.post('/api/clients', ensureLoggedIn, (req, res) => {
-  const { name, email, phone } = req.body;
-app.get('/api/clients', (req, res) => {
-  res.json(db.getClients());
-});
 
-// If you have an authentication middleware, define ensureLoggedIn above or remove it from the route
 app.post('/api/clients', (req, res) => {
   const { name, email, phone } = req.body;
   const id = db.getClients().length + 1;
