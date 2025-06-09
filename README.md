@@ -12,7 +12,7 @@ This project provides a simple CRM application for insurance agents. It includes
    ```bash
    node server.js
    ```
- codex/fix-syntaxerror-in-server.js
+
 
 3. Open your browser and navigate to `http://localhost:3000` to use the CRM.
 
