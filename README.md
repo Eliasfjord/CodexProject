@@ -1,13 +1,6 @@
 # Insurance CRM
 
- anszxq-codex/build-crm-app-for-insurance-agents
 This project provides a simple CRM application for insurance agents. It includes a Node.js backend and a minimal frontend written in vanilla HTML/JavaScript.
-
-## Getting Started
-
-1. Start the server:
-
-This project provides a simple CRM application for insurance agents. It includes a Node.js backend built with Express and a minimal frontend written in vanilla HTML/JavaScript.
 
 ## Getting Started
 
@@ -15,26 +8,17 @@ This project provides a simple CRM application for insurance agents. It includes
    ```bash
    npm install
    ```
-
 2. Start the server:
- main
    ```bash
    node server.js
    ```
-
-anszxq-codex/build-crm-app-for-insurance-agents
-2. Open your browser and navigate to `http://localhost:3000` to use the CRM.
-
-3. Open your browser and navigate to `http://localhost:3000` to use the CRM.
- main
+3. Open your browser and navigate to `http://localhost:3000`.
 
 ## Features
 
-- Add new clients with name, email, and phone number.
+- Dashboard, calendar, leads and profile pages.
+- Add new clients with name, email, and phone number from the leads page.
 - View a list of existing clients.
- anszxq-codex/build-crm-app-for-insurance-agents
 - Client data is persisted to `db.json`.
-
-main
 
 This is a foundation for future enhancements such as team management and dashboards.
