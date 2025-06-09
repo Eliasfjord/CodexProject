@@ -2,18 +2,16 @@
   "name": "insurance-crm",
   "version": "1.0.0",
   "main": "server.js",
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
+
+
   "scripts": {
     "start": "node server.js"
   },
->>>>>>> Stashed changes
-=======
+
   "scripts": {
     "start": "node server.js"
   },
->>>>>>> Stashed changes
+
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
