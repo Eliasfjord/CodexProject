@@ -92,6 +92,17 @@ app.get('/api/stats', (req, res) => {
   const sales = calls.filter(c => c.outcome === 'sale').length;
   const closeRate = total ? sales / total : 0;
   res.json({ totalCalls: total, sales, closeRate });
+});
+
+// Aggregate client counts by status for charts
+app.get('/api/clientStats', (req, res) => {
+  const counts = {};
+  for (const client of db.getClients()) {
+    const status = client.status || 'Unknown';
+    counts[status] = (counts[status] || 0) + 1;
+  }
+  res.json(counts);
+});
 
 app.get('/api/meetings', (req, res) => {
   res.json(db.getMeetings());
